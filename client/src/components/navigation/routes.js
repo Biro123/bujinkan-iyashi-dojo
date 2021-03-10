@@ -9,6 +9,7 @@ import { PasswordReset, SignUp, SignIn } from '../auth/userfrontAuth'
 // import SignUp from '../auth/SignUp';
 import SignOut from '../auth/SignOut';
 import Home from '../content/Home';
+import BreakpointGrid from '../layout/BreakpointGrid';
 
 const routes = (isAuthenticated) => {
   return  [
@@ -18,6 +19,13 @@ const routes = (isAuthenticated) => {
       disabled: false,
       icon: HomeIcon,
       component: Home
+    },
+    {
+      path: '/layout',
+      sidebarName: 'Layout',
+      disabled: false,
+      icon: AccountCircleIcon,
+      component: BreakpointGrid
     },
     {
       path: '/members',
