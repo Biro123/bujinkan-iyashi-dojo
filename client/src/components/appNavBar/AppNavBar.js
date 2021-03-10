@@ -52,11 +52,12 @@ export default function AppNavBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Title
+            Bujinkan Iyashi Dojo
           </Typography>
           <Switch
             onChange={themeState.toggle}
-            inputProps={{ 'aria-label': 'secondary checkbox' }}
+            color="secondary"
+            inputProps={{ 'aria-label': 'Theme switch' }}
           />
         </Toolbar>
       </AppBar>
