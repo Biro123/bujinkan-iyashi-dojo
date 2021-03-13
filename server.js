@@ -31,6 +31,7 @@ app.use(express.json({ extended: false }));
 
 // Define routes
 app.use('/api/users', require('./routes/api/users'));
+app.use('/api/posts', require('./routes/api/posts'));
 app.use('/api/data', require('./routes/api/data')); // replace
 
 // Serve static assets in production
