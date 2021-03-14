@@ -30,7 +30,7 @@ const routes = (isAuthenticated) => {
     {
       path: '/members',
       sidebarName: 'Members',
-      disabled: false,
+      disabled: !isAuthenticated,
       icon: AccountCircleIcon,
       component: Members
     },

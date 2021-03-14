@@ -2,6 +2,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Data from './Data';
+import Posts from './posts/Posts';
 
 const Members = () => {
 
@@ -15,7 +16,8 @@ const Members = () => {
           <Typography variant="subtitle1" color="textSecondary" gutterBottom>
             And some subtext here
           </Typography>
-          <Data />
+          <Posts tag='Kamae'/>
+          {/* <Data /> */}
         </Grid>
       </Grid>
     </Container>

@@ -5,6 +5,7 @@ module.exports = function(req, res, next) {
   // Read the JWT access token from the request header
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
+  
   if (token == null) 
     return res.status(401).json({ errors: [{ msg: 'No token, authorisation denied' }] }); 
   
@@ -16,13 +17,13 @@ module.exports = function(req, res, next) {
     // decode token with secret key
     const decoded = jwt.verify(token, secret, { algorithms: ["RS256"] });
     req.auth = decoded;
-    req.user = extractIdToken(req);
-
-    // execute callback
-    next();
   } catch (err) {
-    res.status(403).json({ errors: [{ msg: 'Token is not valid' }] });
+    return res.status(403).json({ errors: [{ msg: 'Token is not valid' }] });
   }
+
+  req.user = extractIdToken(req);
+  // execute callback
+  next();
 };
 
 // Read the JWT ID token from userFront to get 

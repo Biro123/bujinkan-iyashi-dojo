@@ -47,17 +47,19 @@ const SideBar = (props) => {
   const routeList = routes(userState.isAuthenticated);
 
   const menuItems = routeList.map((menuItem, index) => {
-    return (
-      <ListItem button key={index} disabled={menuItem.disabled}
-        onClick={() => props.history.push(menuItem.path)}>
-        <MenuItem selected={activeRoute(menuItem.path)}>
-          <ListItemIcon>
-             {React.createElement(menuItem.icon)}                        
-          </ListItemIcon>
-          <ListItemText primary={menuItem.sidebarName} />
-        </MenuItem>
-      </ListItem>
-    );
+    if (!menuItem.disabled) {
+      return (
+        <ListItem button key={index} disabled={menuItem.disabled}
+          onClick={() => props.history.push(menuItem.path)}>
+          <MenuItem selected={activeRoute(menuItem.path)}>
+            <ListItemIcon>
+               {React.createElement(menuItem.icon)}                        
+            </ListItemIcon>
+            <ListItemText primary={menuItem.sidebarName} />
+          </MenuItem>
+        </ListItem>
+      );
+    } 
   });
 
   return (

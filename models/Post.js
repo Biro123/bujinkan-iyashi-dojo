@@ -21,6 +21,13 @@ const PostSchema = new Schema({
   avatar: {
     type: String
   },
+  tags: [
+    {
+      tag: {
+        type: String
+      }
+    }
+  ],
   likes: [
     {
       user: {
