@@ -1,10 +1,28 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
 const { check, validationResult } = require('express-validator');
 const ufAuth = require('../../middleware/ufAuth');
 
 const Post = require('../../models/Post');
 const checkObjectId = require('../../middleware/checkObjectId');
+
+async function getUser(userId) {
+
+  const config = {
+    headers: { 
+      Authorization: `Bearer ${process.env.USERFRONT_API_KEY}`,
+    }
+  };
+
+  try {
+    const response = await axios.get('https://api.userfront.com/v0/users/' + userId, config);
+    return response;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
 // @route    POST api/posts
 // @desc     Create a post
@@ -14,18 +32,27 @@ router.post(
   ufAuth,
   check('text', 'Text is required').notEmpty(),
   async (req, res) => {
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    try {
-      const user = await User.findById(req.user.id).select('-password');
+    // Read logged-in user details from userfront api
+    const apiRes = await getUser(req.auth.userId);
+    if (!apiRes) {
+      return res.status(500).json({ errors: [{ msg: 'Unable to connect to auth service' }] });
+    }
+    const user = apiRes.data;
 
+    // Create new post
+    try {
       const newPost = new Post({
         text: req.body.text,
-        name: req.auth.userName,
-        // avatar: user.avatar,
+        link: req.body.link,
+        // tags: req.body.tags,
+        name: user.username,
+        avatar: user.image,
         user: req.auth.userUuid
       });
 
@@ -43,7 +70,6 @@ router.post(
 // @desc     Get all posts
 // @access   Private
 router.get('/', ufAuth, async (req, res) => {
-  console.log(req.user);
   try {
     const posts = await Post.find().sort({ date: -1 });
     res.json(posts);
