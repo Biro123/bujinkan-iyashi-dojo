@@ -47,10 +47,14 @@ router.post(
 
     // Create new post
     try {
+      const newTags = req.body.tags.map(tagName => {
+        return { tag: tagName }
+      });
+
       const newPost = new Post({
         text: req.body.text,
         link: req.body.link,
-        // tags: req.body.tags,
+        tags: newTags,
         name: user.username,
         avatar: user.image,
         user: req.auth.userUuid
