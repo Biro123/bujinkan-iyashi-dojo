@@ -12,6 +12,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import Tags from './Tags';
+
 import { useUserState } from '../../../globalState/userState';
 import { useAlertState } from '../../../globalState/alertState';
 
@@ -40,15 +42,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PostForm(props) {
+
+  const emptyForm = {
+    text: '',
+    link: '',
+    tags: [],
+  };
+
   const classes = useStyles();  
   const alertState = useAlertState();
   const userState = useUserState();
   const open = useState(false);
-  const formData = useState({
-    text: '',
-    link: '',
-    tags: [],
-  });
+  const formData = useState(emptyForm);
+  const tagValue = useState([]);
+
+	const tagOptions = [
+    {label: "Philosophy", value: 1}, 
+    {label: "Basics", value: 2}, 
+    {label: "Kamae", value: 3}
+  ];
+
+  const handleTagClick = (data) => {
+    tagValue.set(data);
+
+    const selectedTagNames = tagOptions
+      .filter((option) => data.indexOf(option.value) !== -1)
+      .map((option) => option.label);
+      
+    formData.tags.set(selectedTagNames);
+  };
 
   const handleClickOpen = () => {
     open.set(true);
@@ -63,23 +85,32 @@ export default function PostForm(props) {
     const config = {
       headers: { 
         'Content-Type': 'application/json',
-        'x-uf-idToken': Userfront.idToken(),
         Authorization: `Bearer ${Userfront.accessToken()}`,
       }
     };
 
     const body = JSON.stringify(formData.get());
     try {
-      const res = await axios.post('/api/data', body, config);
-      props.onNewData(res.data);
-      formData.set({text: ''});
+      const res = await axios.post('/api/posts', body, config);
+      // props.onNewData(res.data);
+      formData.set(emptyForm);
     } catch (err) {      
-      const errors = err.response.data ? err.response.data.errors : null;      
-      if (errors) {
-        errors.forEach(error => alertState.setAlert(error.msg, 'error'));
+      if (err.response) {
+        // Server responded with a status in the 2xx range
+        const errors = err.response.data ? err.response.data.errors : null;      
+        if (errors) {
+          errors.forEach(error => alertState.setAlert(error.msg, 'error'));
+        } else {
+          alertState.setAlert(err.response.statusText, 'error');
+          formData.text.set('');
+        }
+      } else if (err.request) {
+        // No response was received
+        console.log(err.request);
+        alertState.setAlert('Unexpected error', 'error');
       } else {
-        alertState.setAlert(err.response.statusText, 'error');
-        formData.text.set('');
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', err.message);
       }
     }
   };  
@@ -133,12 +164,13 @@ export default function PostForm(props) {
     <Dialog open={open.get()} onClose={handleClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">New Link</DialogTitle>
       <DialogContent>
-        {/* <DialogContentText>
-          To subscribe to this website, please enter your email address here. We will send updates
-          occasionally.
-        </DialogContentText> */}
-        {/* <div className={classes.paper}> */}
         <form className={classes.form} noValidate  onSubmit={(e) => onSubmit(e)}>
+          <Tags
+            label="Label"
+            value={tagValue.get()}
+            setValue={handleTagClick}
+            options={tagOptions}
+          />
           <TextField
             className={classes.textfield} 
             name="text"
@@ -173,7 +205,6 @@ export default function PostForm(props) {
             Submit
           </Button>   
         </form>
-        {/* </div> */}
       </DialogContent>
     </Dialog>
   );
