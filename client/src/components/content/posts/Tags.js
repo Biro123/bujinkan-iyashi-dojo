@@ -10,6 +10,8 @@ const useStyles = makeStyles((theme) => ({
   container: {
     margin: ".5rem 0 .5rem",
     textAlign: "center",
+    display: 'flex',
+    alignItems: 'center'
   },
   chipsDiv: {
     marginTop: ".3rem",
@@ -27,11 +29,13 @@ const Tags = ({
   value,
   setValue,
   options,
+  allowClick,
   label
 }) => {
   const classes = useStyles();
 
   const handleClick = (clickedValue) => {
+    if (!setValue) {return;}
     if (value.find((e) => e === clickedValue)) {
       const index = value.findIndex((e) => e === clickedValue);
       let arr = [...value];
@@ -42,9 +46,13 @@ const Tags = ({
     }
   };
 
+  // console.log(options);
   return (
     <>
       <div className={classes.container}>
+        {label && (
+          <Typography variant="body2">{label}</Typography>
+        )}
         <div className={classes.chipsDiv}>
           {options && options.length
             ? options.map((option, i) => (
@@ -62,8 +70,8 @@ const Tags = ({
                   label={
                     <Typography variant="body2">{`${option.label}`}</Typography>
                   }
-                  clickable
-                  onClick={() => handleClick(option.value)}
+                  clickable={allowClick}
+                  onClick={allowClick? () => handleClick(option.value) : null}
                 />
               ))
             : null}

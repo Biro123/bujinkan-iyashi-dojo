@@ -1,6 +1,7 @@
 import { useState } from '@hookstate/core';
 import Userfront from '@userfront/react';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -9,17 +10,19 @@ import axios from 'axios';
 
 import DataForm from '../DataForm';
 import PostForm from './PostForm';
+import Tags from './Tags';
 
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
     marginBottom: 12,
+    textAlign: 'left'
   },
   title: {
     fontSize: 14,
   },
-  content: {
-    padding: '1rem 1.5rem 1.5rem',
+  postedBy: {
+    textAlign: 'right',
   },
   pos: {
     marginBottom: 12,
@@ -27,7 +30,6 @@ const useStyles = makeStyles({
 });
 
 const Posts = ({tag}) => {
-  console.log('in posts');
   const classes = useStyles();
   const config = {
     headers: { 
@@ -66,11 +68,25 @@ const Posts = ({tag}) => {
     <>
       <PostForm />
       {data.map((post, index) =>
-        <Card key={index} className={classes.root}>
-          <CardContent>
-            <Typography variant='body1' >
+        <Card key={index} className={classes.root} variant="outlined">
+          <CardContent>            
+            <Typography variant='body2' >
               {post.text}
-            </Typography>            
+            </Typography>
+            <Link href={post.link} color="secondary">
+              {post.link}
+            </Link> 
+            <Tags
+              label="Categories:"
+              value={[]}
+              // setValue={handleTagClick}
+              options={post.tags.map((tag, index) => { 
+                return { label: tag.tag, value: index }                
+              })}
+            />
+            <Typography variant='subtitle2' color='textSecondary' className={classes.postedBy} >
+              {'Posed by: ' + post.name + ' on ' + new Date(post.date).toDateString()}
+            </Typography>          
           </CardContent>
         </Card>
         // <p key={index}>{entry.text}</p>

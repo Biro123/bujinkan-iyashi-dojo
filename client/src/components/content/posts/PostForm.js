@@ -94,6 +94,7 @@ export default function PostForm(props) {
       const res = await axios.post('/api/posts', body, config);
       // props.onNewData(res.data);
       formData.set(emptyForm);
+      handleClose();
     } catch (err) {      
       if (err.response) {
         // Server responded with a status in the 2xx range
@@ -133,9 +134,9 @@ export default function PostForm(props) {
     return (
       <Button
         // type="submit"
-        fullWidth
+        // fullWidth
         variant="contained"
-        color="primary"
+        color="secondary"
         className={classes.submit}
         onClick={handleClickOpen}
       >
@@ -166,7 +167,8 @@ export default function PostForm(props) {
       <DialogContent>
         <form className={classes.form} noValidate  onSubmit={(e) => onSubmit(e)}>
           <Tags
-            label="Label"
+            label="Tags"
+            allowClick
             value={tagValue.get()}
             setValue={handleTagClick}
             options={tagOptions}
