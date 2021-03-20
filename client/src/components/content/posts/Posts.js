@@ -10,6 +10,7 @@ import axios from 'axios';
 
 import DataForm from '../DataForm';
 import PostForm from './PostForm';
+import Post from './Post';
 import Tags from './Tags';
 
 const useStyles = makeStyles({
@@ -68,27 +69,28 @@ const Posts = ({tag}) => {
     <>
       <PostForm />
       {data.map((post, index) =>
-        <Card key={index} className={classes.root} variant="outlined">
-          <CardContent>            
-            <Typography variant='body2' >
-              {post.text}
-            </Typography>
-            <Link href={post.link} color="secondary">
-              {post.link}
-            </Link> 
-            <Tags
-              label="Categories:"
-              value={[]}
-              // setValue={handleTagClick}
-              options={post.tags.map((tag, index) => { 
-                return { label: tag.tag, value: index }                
-              })}
-            />
-            <Typography variant='subtitle2' color='textSecondary' className={classes.postedBy} >
-              {'Posed by: ' + post.name + ' on ' + new Date(post.date).toDateString()}
-            </Typography>          
-          </CardContent>
-        </Card>
+        <Post {...post} key={index}/>
+        // <Card key={index} className={classes.root} variant="outlined">
+        //   <CardContent>            
+        //     <Typography variant='body2' >
+        //       {post.text}
+        //     </Typography>
+        //     <Link href={post.link} color="secondary">
+        //       {post.link}
+        //     </Link> 
+        //     <Tags
+        //       label="Categories:"
+        //       value={[]}
+        //       // setValue={handleTagClick}
+        //       options={post.tags.map((tag, index) => { 
+        //         return { label: tag.tag, value: index }                
+        //       })}
+        //     />
+        //     <Typography variant='subtitle2' color='textSecondary' className={classes.postedBy} >
+        //       {'Posed by: ' + post.name + ' on ' + new Date(post.date).toDateString()}
+        //     </Typography>          
+        //   </CardContent>
+        // </Card>
         // <p key={index}>{entry.text}</p>
       )}
       {/* <DataForm onNewData={handleNewData}/> */}
