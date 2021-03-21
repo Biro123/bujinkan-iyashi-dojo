@@ -1,33 +1,27 @@
 import { useState } from '@hookstate/core';
 import Userfront from '@userfront/react';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
-import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 
-import DataForm from '../DataForm';
-import PostForm from './PostForm';
 import Post from './Post';
 import Tags from './Tags';
 
 const useStyles = makeStyles({
-  root: {
-    minWidth: 275,
-    marginBottom: 12,
-    textAlign: 'left'
-  },
-  title: {
-    fontSize: 14,
-  },
-  postedBy: {
-    textAlign: 'right',
-  },
-  pos: {
-    marginBottom: 12,
-  },
+  // root: {
+  //   minWidth: 275,
+  //   marginBottom: 12,
+  //   textAlign: 'left'
+  // },
+  // title: {
+  //   fontSize: 14,
+  // },
+  // postedBy: {
+  //   textAlign: 'right',
+  // },
+  // pos: {
+  //   marginBottom: 12,
+  // },
 });
 
 const Posts = ({tag}) => {
@@ -59,7 +53,6 @@ const Posts = ({tag}) => {
   if (data.length === 0) {    
     return (
       <>
-        <PostForm />
         <p>No data found</p>
       </>
     )
@@ -67,33 +60,11 @@ const Posts = ({tag}) => {
   
   return (
     <>
-      <PostForm />
       {data.map((post, index) =>
-        <Post {...post} key={index}/>
-        // <Card key={index} className={classes.root} variant="outlined">
-        //   <CardContent>            
-        //     <Typography variant='body2' >
-        //       {post.text}
-        //     </Typography>
-        //     <Link href={post.link} color="secondary">
-        //       {post.link}
-        //     </Link> 
-        //     <Tags
-        //       label="Categories:"
-        //       value={[]}
-        //       // setValue={handleTagClick}
-        //       options={post.tags.map((tag, index) => { 
-        //         return { label: tag.tag, value: index }                
-        //       })}
-        //     />
-        //     <Typography variant='subtitle2' color='textSecondary' className={classes.postedBy} >
-        //       {'Posed by: ' + post.name + ' on ' + new Date(post.date).toDateString()}
-        //     </Typography>          
-        //   </CardContent>
-        // </Card>
-        // <p key={index}>{entry.text}</p>
+        <Grid  key={index} item xs={12} sm={6} md={4}>
+          <Post {...post}/>  
+        </Grid>        
       )}
-      {/* <DataForm onNewData={handleNewData}/> */}
     </>
   )
 }

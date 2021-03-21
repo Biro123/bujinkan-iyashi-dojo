@@ -10,7 +10,8 @@ import Tags from './Tags';
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 275,
+    minWidth: 248,
+    maxWidth: 360,
     marginBottom: 12,
     textAlign: 'left'
   },
@@ -28,6 +29,7 @@ const LinkDisplay = ({ link, playerHeight }) => {
       <ReactPlayer 
         url={link} 
         width='100%'
+        controls
         height={playerHeight}
         // height='calc(320 / 1.778)'
       />
@@ -55,9 +57,9 @@ const Post = (props) => {
     setPlayerHeight(newHeight);
   },[thisRef.current]); 
   
-  return (
+  return (    
     <Card className={classes.root} ref={thisRef} variant="outlined">
-      <CardContent>            
+      <CardContent style={{ padding: '0' }}>            
         <Typography variant='body2' >
           {text}
         </Typography>
@@ -70,8 +72,8 @@ const Post = (props) => {
             return { label: tag.tag, value: index }                
           })}
         />
-        <Typography variant='subtitle2' color='textSecondary' className={classes.postedBy} >
-          {'Posed by: ' + name + ' on ' + new Date(date).toDateString()}
+        <Typography variant='caption' color='secondary' className={classes.postedBy} >
+          {'Posted by: ' + name + ' on ' + new Date(date).toDateString()}
         </Typography>          
       </CardContent>
     </Card>
