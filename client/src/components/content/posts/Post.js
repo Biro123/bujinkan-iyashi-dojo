@@ -16,37 +16,18 @@ const useStyles = makeStyles({
     textAlign: 'left'
   },
   postedBy: {
-    textAlign: 'right',
+    textAlign: 'none',
   },
   pos: {
     marginBottom: 12,
   },
 });
 
-const LinkDisplay = ({ link, playerHeight }) => {
-  if (link.includes('www.youtube.com')) {
-    return (
-      <ReactPlayer 
-        url={link} 
-        width='100%'
-        controls
-        height={playerHeight}
-        // height='calc(320 / 1.778)'
-      />
-    );  
-  }
-  return (
-    <Link href={link} color="secondary">
-      {link}
-    </Link> 
-  );
-};
-
 const Post = (props) => {
   const [ playerHeight, setPlayerHeight ] = useState(240);
   const thisRef = createRef(null);
   const classes = useStyles();
-  const { text, link, tags, date, name } = props;
+  const { title, text, link, tags, date, name } = props;
 
   useEffect(() => {
     // console.log('width', thisRef.current ? thisRef.current.offsetWidth : 0);
@@ -56,16 +37,47 @@ const Post = (props) => {
     // console.log('height: ' + newHeight);  
     setPlayerHeight(newHeight);
   },[thisRef.current]); 
-  
+
+  const contentDisplay = () => {
+    if (link.includes('www.youtube.com')) {
+      return (
+        <>
+          <ReactPlayer 
+            url={link} 
+            width='100%'
+            controls
+            height={playerHeight}
+            // height='calc(320 / 1.778)'
+          />
+          <Typography variant='body2' >
+            {text}
+          </Typography>
+        </>
+      );  
+    }
+    return (
+      <>
+        <Typography variant='body2' >
+            {text}
+        </Typography>
+        <div style={{ height: `${playerHeight}px`, wordWrap: 'break-word', paddingTop: '12px' }}>
+          <Link href={link} color="secondary" >
+            {link}
+          </Link> 
+        </div>    
+      </>
+    );
+  };
+
   return (    
     <Card className={classes.root} ref={thisRef} variant="outlined">
-      <CardContent style={{ padding: '0' }}>            
-        <Typography variant='body2' >
-          {text}
-        </Typography>
-        <LinkDisplay link={link} playerHeight={playerHeight} />
+      <CardContent style={{ padding: '0' }}>   
+        <Typography variant='h6' >
+          {title}
+        </Typography>        
+        {contentDisplay()}
         <Tags
-          label="Categories:"
+          // label="Categories:"
           value={[]}
           // setValue={handleTagClick}
           options={tags.map((tag, index) => { 

@@ -5,9 +5,12 @@ const PostSchema = new Schema({
   user: {
     type: String
   },
-  text: {
+  title: {
     type: String,
     required: true
+  },
+  text: {
+    type: String
   },
   link: {
     type: String

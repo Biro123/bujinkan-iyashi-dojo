@@ -30,7 +30,7 @@ async function getUser(userId) {
 router.post(
   '/',
   ufAuth,
-  check('text', 'Text is required').notEmpty(),
+  check('title', 'Title is required').notEmpty(),
   async (req, res) => {
 
     const errors = validationResult(req);
@@ -52,6 +52,7 @@ router.post(
       });
 
       const newPost = new Post({
+        title: req.body.title,
         text: req.body.text,
         link: req.body.link,
         tags: newTags,

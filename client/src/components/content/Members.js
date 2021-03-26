@@ -10,12 +10,12 @@ const Members = () => {
     <Container component="main" >
       <Grid container spacing={2}>
         <Grid item xs={12} s={12} m={12}>
-          <Typography variant="h4" color="primary" >
+          {/* <Typography variant="h4" color="primary" >
             Header goes here
           </Typography>
           <Typography variant="subtitle1" color="textSecondary" gutterBottom>
             And some subtext here
-          </Typography>
+          </Typography> */}
           <PostForm />
         </Grid>        
         <Posts tag='Kamae'/>

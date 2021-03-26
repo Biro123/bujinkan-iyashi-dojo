@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PostForm(props) {
 
   const emptyForm = {
+    title: '',
     text: '',
     link: '',
     tags: [],
@@ -59,7 +60,8 @@ export default function PostForm(props) {
 	const tagOptions = [
     {label: "Philosophy", value: 1}, 
     {label: "Basics", value: 2}, 
-    {label: "Kamae", value: 3}
+    {label: "Kamae", value: 3},
+    {label: "Kihon Happo", value: 4}
   ];
 
   const handleTagClick = (data) => {
@@ -116,15 +118,15 @@ export default function PostForm(props) {
     }
   };  
 
-  const { text, link } = formData.get();
+  const { title, text, link } = formData.get();
 
   const onChange = (e) =>
     formData[e.target.name].set(e.target.value);
 
   const onSubmit = async (e) => {
     e.preventDefault();    
-    if (text === '') {
-      alertState.setAlert('Please enter some text', 'error');
+    if (title === '') {
+      alertState.setAlert('Please enter a title', 'error');
     } else {
       postData(formData.get());
     }
@@ -166,6 +168,18 @@ export default function PostForm(props) {
       <DialogTitle id="form-dialog-title">New Link</DialogTitle>
       <DialogContent>
         <form className={classes.form} noValidate  onSubmit={(e) => onSubmit(e)}>
+        <TextField
+            className={classes.textfield} 
+            name="title"
+            variant="outlined"
+            required
+            fullWidth
+            id="title"
+            label="Enter Title"
+            autoFocus
+            value={title}
+            onChange={(e) => onChange(e)}
+          />
           <Tags
             label="Tags"
             allowClick
@@ -177,13 +191,11 @@ export default function PostForm(props) {
             className={classes.textfield} 
             name="text"
             variant="outlined"
-            required
             fullWidth
             id="text"
             label="Enter Text"
-            autoFocus
             multiline
-            rows={6}
+            rows={2}
             value={text}
             onChange={(e) => onChange(e)}
           />
