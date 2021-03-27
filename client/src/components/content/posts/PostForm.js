@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(3)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(1, 0, 1),
   },
 }));
 
@@ -127,15 +127,14 @@ export default function PostForm(props) {
 
   if (!open.get()) {
     return (
-      <Button
-        // type="submit"
-        // fullWidth
+      <Button 
+        fullWidth
         variant="contained"
         color="secondary"
         className={classes.submit}
         onClick={handleClickOpen}
       >
-        New Post
+        New
       </Button>
     )  
   };
