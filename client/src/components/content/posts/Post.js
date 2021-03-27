@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-import Tags from './Tags';
+import Tags, { tagOptions } from './Tags';
 
 const useStyles = makeStyles({
   root: {
@@ -78,10 +78,10 @@ const Post = (props) => {
         {contentDisplay()}
         <Tags
           // label="Categories:"
-          value={[]}
+          value={tagOptions.map((tag) => tag.value)} // highlight all
           // setValue={handleTagClick}
           options={tags.map((tag, index) => { 
-            return { label: tag.tag, value: index }                
+            return { label: tag.tag, value: index + 1 }                
           })}
         />
         <Typography variant='caption' color='secondary' className={classes.postedBy} >

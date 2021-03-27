@@ -53,7 +53,6 @@ const Tags = ({
     }
   };
 
-  // console.log(options);
   return (
     <>
       <div className={classes.container}>
