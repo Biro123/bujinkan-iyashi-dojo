@@ -55,6 +55,7 @@ export default function AppNavBar() {
             Bujinkan Iyashi Dojo
           </Typography>
           <Switch
+            checked={themeState.get() === 'light'}
             onChange={themeState.toggle}
             color="secondary"
             inputProps={{ 'aria-label': 'Theme switch' }}
