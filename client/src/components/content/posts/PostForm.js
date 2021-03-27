@@ -12,7 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import Tags from './Tags';
+import Tags, { tagOptions } from './Tags';
 
 import { useUserState } from '../../../globalState/userState';
 import { useAlertState } from '../../../globalState/alertState';
@@ -56,13 +56,6 @@ export default function PostForm(props) {
   const open = useState(false);
   const formData = useState(emptyForm);
   const tagValue = useState([]);
-
-	const tagOptions = [
-    {label: "Philosophy", value: 1}, 
-    {label: "Basics", value: 2}, 
-    {label: "Kamae", value: 3},
-    {label: "Kihon Happo", value: 4}
-  ];
 
   const handleTagClick = (data) => {
     tagValue.set(data);

@@ -1,10 +1,25 @@
+import { useState } from '@hookstate/core';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Posts from './posts/Posts';
 import PostForm from './posts/PostForm';
+import Tags, { tagOptions } from './posts/Tags';
 
 const Members = () => {
+
+  const tagValue = useState([]);
+
+  const handleTagClick = (data) => {
+    // console.log(data);
+    tagValue.set(data);    
+  };
+
+  const extractTagNames = () => {
+    return tagOptions
+      .filter((option) => tagValue.get().indexOf(option.value) !== -1)
+      .map((option) => option.label);
+  }      
 
   return (
     <Container component="main" >
@@ -16,9 +31,16 @@ const Members = () => {
           <Typography variant="subtitle1" color="textSecondary" gutterBottom>
             And some subtext here
           </Typography> */}
+          <Tags 
+            label="Categories:"
+            value={tagValue.get()}
+            setValue={handleTagClick}
+            options={tagOptions}
+            allowClick
+          />
           <PostForm />
         </Grid>        
-        <Posts tag='Kamae'/>
+        <Posts tags={extractTagNames()}/>
       </Grid>
     </Container>
   )

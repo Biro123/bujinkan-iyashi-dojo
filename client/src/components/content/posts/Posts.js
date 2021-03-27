@@ -24,7 +24,7 @@ const useStyles = makeStyles({
   // },
 });
 
-const Posts = ({tag}) => {
+const Posts = ({ tags }) => {
   const classes = useStyles();
   const config = {
     headers: { 
@@ -60,11 +60,15 @@ const Posts = ({tag}) => {
   
   return (
     <>
-      {data.map((post, index) =>
-        <Grid  key={index} item xs={12} sm={6} md={4}>
-          <Post {...post}/>  
-        </Grid>        
-      )}
+      {data.map((post, index) => {
+        if (post.tags.some(postTag => tags.includes(postTag.tag))) {
+          return (
+            <Grid  key={index} item xs={12} sm={6} md={4}>
+              <Post {...post}/>  
+            </Grid>     
+          )
+        }         
+      })}
     </>
   )
 }
