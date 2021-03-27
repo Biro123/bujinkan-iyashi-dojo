@@ -7,9 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Tags, { tagOptions } from './Tags';
@@ -53,7 +51,6 @@ export default function PostForm(props) {
   const classes = useStyles();  
   const alertState = useAlertState();
   const userState = useUserState();
-  const open = useState(false);
   const formData = useState(emptyForm);
   const tagValue = useState([]);
 
@@ -65,14 +62,6 @@ export default function PostForm(props) {
       .map((option) => option.label);
       
     formData.tags.set(selectedTagNames);
-  };
-
-  const handleClickOpen = () => {
-    open.set(true);
-  };
-
-  const handleClose = () => {
-    open.set(false);
   };
 
   const postData = async () => { 
@@ -89,7 +78,7 @@ export default function PostForm(props) {
       const res = await axios.post('/api/posts', body, config);
       // props.onNewData(res.data);
       formData.set(emptyForm);
-      handleClose();
+      props.onClose();
     } catch (err) {      
       if (err.response) {
         // Server responded with a status in the 2xx range
@@ -125,20 +114,6 @@ export default function PostForm(props) {
     }
   };
 
-  if (!open.get()) {
-    return (
-      <Button 
-        fullWidth
-        variant="contained"
-        color="secondary"
-        className={classes.submit}
-        onClick={handleClickOpen}
-      >
-        New
-      </Button>
-    )  
-  };
-
   if (!userState.isAuthenticated) {
     return (
       <Typography variant='body1' color='secondary'>
@@ -156,7 +131,7 @@ export default function PostForm(props) {
   }
 
   return (
-    <Dialog open={open.get()} onClose={handleClose} aria-labelledby="form-dialog-title">
+    <Dialog open onClose={props.onClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">New Link</DialogTitle>
       <DialogContent>
         <form className={classes.form} noValidate  onSubmit={(e) => onSubmit(e)}>
