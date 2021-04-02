@@ -64,7 +64,7 @@ const Post = (props) => {
   };
 
   const handleDeleteClick = (event) => {
-    console.log(event);
+    props.onDelete(props.post);
     setAnchorEl(null);
   };
 

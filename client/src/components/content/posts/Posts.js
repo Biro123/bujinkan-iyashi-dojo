@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   // },
 });
 
-const Posts = ({ tags, onEdit, isLoading, posts }) => {
+const Posts = ({ tags, onEdit, onDelete, isLoading, posts }) => {
   const classes = useStyles();
 
   if (isLoading) {
@@ -49,7 +49,7 @@ const Posts = ({ tags, onEdit, isLoading, posts }) => {
         if (post.tags.some(postTag => tags.includes(postTag.tag))) {
           return (
             <Grid  key={index} item xs={12} sm={6} md={4}>
-              <Post post={post} onEdit={onEdit}/>  
+              <Post post={post} onEdit={onEdit} onDelete={onDelete}/>  
             </Grid>     
           )
         }         

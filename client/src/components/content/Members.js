@@ -9,6 +9,7 @@ import Container from '@material-ui/core/Container';
 
 import Posts from './posts/Posts';
 import PostForm from './posts/PostForm';
+import ConfirmDeleteDialog from './posts/ConfirmDeleteDialog';
 import Tags, { tagOptions } from './posts/Tags';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 const Members = () => {
   const [tagValue, setTagValue] = useState(tagOptions.map((tag) => tag.value));
   const [renderForm, setRenderForm] = useState({ display: false, post: null });
+  const [renderDeleteDialog, setRenderDeleteDialog] = useState({ display: false, post: null });
   const classes = useStyles();
   const [postState, setPostState] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,6 +59,15 @@ const Members = () => {
     shouldReload && fetchData();
   };
 
+  const handleDialogOpen = (post) => {
+    setRenderDeleteDialog({ display: true, post: post });
+  };
+
+  const handleDialogClose = (shouldReload) => {
+    setRenderDeleteDialog({ display: false, post: null });
+    shouldReload && fetchData();
+  };
+
   const extractTagNames = () => {
     return tagOptions
       .filter((option) => tagValue.indexOf(option.value) !== -1)
@@ -68,6 +79,9 @@ const Members = () => {
       {renderForm.display && 
         <PostForm onClose={handleFormClose} post={renderForm.post}/> 
       }    
+      {renderDeleteDialog.display && 
+        <ConfirmDeleteDialog onClose={handleDialogClose} post={renderDeleteDialog.post}/> 
+      }   
       <Grid container spacing={2}>
           {/* <Typography variant="h4" color="primary" >
             Header goes here
@@ -98,6 +112,7 @@ const Members = () => {
         <Posts 
           tags={extractTagNames()} 
           onEdit={handleFormOpen} 
+          onDelete={handleDialogOpen}
           posts={postState}
           isLoading={isLoading}/>
       </Grid>
