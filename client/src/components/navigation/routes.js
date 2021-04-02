@@ -5,11 +5,8 @@ import HomeIcon from '@material-ui/icons/HomeRounded';
 
 import Members from '../content/Members';
 import { PasswordReset, SignUp, SignIn } from '../auth/userfrontAuth'
-// import SignIn from '../auth/SignIn';
-// import SignUp from '../auth/SignUp';
 import SignOut from '../auth/SignOut';
 import Home from '../content/Home';
-import BreakpointGrid from '../layout/BreakpointGrid';
 
 const routes = (isAuthenticated) => {
   return  [
@@ -21,16 +18,10 @@ const routes = (isAuthenticated) => {
       component: Home
     },
     {
-      path: '/layout',
-      sidebarName: 'Layout',
-      disabled: false,
-      icon: AccountCircleIcon,
-      component: BreakpointGrid
-    },
-    {
-      path: '/members',
-      sidebarName: 'Members',
+      path: '/posts',
+      sidebarName: 'Posts',
       disabled: !isAuthenticated,
+      // disabled: false,
       icon: AccountCircleIcon,
       component: Members
     },
