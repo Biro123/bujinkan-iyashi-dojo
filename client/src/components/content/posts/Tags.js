@@ -26,10 +26,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const tagOptions = [
-  {label: "Philosophy", value: 1}, 
-  {label: "Basics", value: 2}, 
-  {label: "Kamae", value: 3},
-  {label: "Kihon Happo", value: 4}
+  {label: "None", value: 1}, 
+  {label: "Philosophy", value: 2}, 
+  {label: "Basics", value: 3}, 
+  {label: "Kamae", value: 4},
+  {label: "Kihon Happo", value: 5},
 ];
 
 const Tags = ({

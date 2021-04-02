@@ -11,10 +11,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Tags, { tagOptions } from './Tags';
+import AlertMessage from '../../alert/AlertMessage';
 
 import { useUserState } from '../../../globalState/userState';
 import { useAlertState } from '../../../globalState/alertState';
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,47 +39,54 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const setTagIndexFromNames = (tagList) => {
+  const tagNames =  tagList.map(tag => tag.tag);
+  return tagOptions
+    .filter((option) => tagNames.includes(option.label))
+    .map(option => option.value);
+};
+
 export default function PostForm(props) {
 
-  const emptyForm = {
+  const emptyForm = {    
     title: '',
     text: '',
     link: '',
     tags: [],
   };
 
+  const initialForm = props.post ? props.post : emptyForm;
+
   const classes = useStyles();  
   const alertState = useAlertState();
   const userState = useUserState();
-  const formData = useState(emptyForm);
-  const tagValue = useState([]);
+  const formData = useState(initialForm);
+  const tagValue = useState(setTagIndexFromNames(initialForm.tags));
 
   const handleTagClick = (data) => {
     tagValue.set(data);
 
     const selectedTagNames = tagOptions
       .filter((option) => data.indexOf(option.value) !== -1)
-      .map((option) => option.label);
+      .map((option) => {return { tag: option.label }});
       
     formData.tags.set(selectedTagNames);
-  };
+  };  
 
-  const postData = async () => { 
-  
+  const postData = async () => {   
     const config = {
       headers: { 
         'Content-Type': 'application/json',
         Authorization: `Bearer ${Userfront.accessToken()}`,
       }
     };
-
     const body = JSON.stringify(formData.get());
     try {
       const res = await axios.post('/api/posts', body, config);
-      // props.onNewData(res.data);
       formData.set(emptyForm);
-      props.onClose();
-    } catch (err) {      
+      props.onClose(true);
+    } catch (err) { 
+      console.log(err);     
       if (err.response) {
         // Server responded with a status in the 2xx range
         const errors = err.response.data ? err.response.data.errors : null;      
@@ -100,6 +107,41 @@ export default function PostForm(props) {
     }
   };  
 
+  const putData = async () => {   
+    const config = {
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${Userfront.accessToken()}`,
+      }
+    };
+    const body = JSON.stringify(formData.get());
+    try {
+      const res = await axios.put('/api/posts/' + formData._id.get(), body, config);
+      // props.onNewData(res.data);
+      formData.set(emptyForm);
+      props.onClose(true);
+    } catch (err) { 
+      console.log(err);     
+      if (err.response) {
+        // Server responded with a status in the 2xx range
+        const errors = err.response.data ? err.response.data.errors : null;      
+        if (errors) {
+          errors.forEach(error => alertState.setAlert(error.msg, 'error'));
+        } else {
+          alertState.setAlert(err.response.statusText, 'error');
+          formData.text.set('');
+        }
+      } else if (err.request) {
+        // No response was received
+        console.log(err.request);
+        alertState.setAlert('Unexpected error', 'error');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', err.message);
+      }
+    }
+  };
+
   const { title, text, link } = formData.get();
 
   const onChange = (e) =>
@@ -110,7 +152,11 @@ export default function PostForm(props) {
     if (title === '') {
       alertState.setAlert('Please enter a title', 'error');
     } else {
-      postData(formData.get());
+      if (formData._id.get()) {
+        putData();
+      } else {
+        postData();
+      }
     }
   };
 
@@ -133,7 +179,7 @@ export default function PostForm(props) {
   return (
     <Dialog open onClose={props.onClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">New Link</DialogTitle>
-      <DialogContent>
+      <DialogContent>        
         <form className={classes.form} noValidate  onSubmit={(e) => onSubmit(e)}>
         <TextField
             className={classes.textfield} 
@@ -175,7 +221,8 @@ export default function PostForm(props) {
             label="Optional Link"
             value={link}
             onChange={(e) => onChange(e)}
-          />                
+          />   
+          <AlertMessage />             
           <Button
             type="submit"
             fullWidth

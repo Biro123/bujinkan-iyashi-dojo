@@ -1,11 +1,7 @@
-import { useState } from '@hookstate/core';
-import Userfront from '@userfront/react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import axios from 'axios';
 
 import Post from './Post';
-import Tags from './Tags';
 
 const useStyles = makeStyles({
   // root: {
@@ -24,33 +20,22 @@ const useStyles = makeStyles({
   // },
 });
 
-const Posts = ({ tags }) => {
+const Posts = ({ tags, onEdit, isLoading, posts }) => {
   const classes = useStyles();
-  const config = {
-    headers: { 
-      // 'Content-Type': 'application/json',
-      // 'x-uf-idToken': Userfront.idToken(),
-      Authorization: `Bearer ${Userfront.accessToken()}`,
-    }
-  };
 
-  const postState = useState(axios.get('/api/posts', config));
-
-  if (postState.promised) {
+  if (isLoading) {
     return <p>Loading...</p>
   }
-  if (postState.error) {
-    console.error(postState.error);
+  if (posts.status !== 200) {
+    console.error(posts.error);
     return <p>Error...</p>
   }
 
-  const { data, status } = postState.get();
+  // const handleNewPost = (newEntry) => {
+  //   posts.set(post => [...post, newEntry]);
+  // }
 
-  const handleNewData = (newEntry) => {
-    postState.data.set(data => [...data, newEntry]);
-  }
-
-  if (data.length === 0) {    
+  if (posts.data.length === 0) {    
     return (
       <>
         <p>No data found</p>
@@ -60,11 +45,11 @@ const Posts = ({ tags }) => {
   
   return (
     <>
-      {data.map((post, index) => {
+      {posts.data.map((post, index) => {
         if (post.tags.some(postTag => tags.includes(postTag.tag))) {
           return (
             <Grid  key={index} item xs={12} sm={6} md={4}>
-              <Post {...post}/>  
+              <Post post={post} onEdit={onEdit}/>  
             </Grid>     
           )
         }         

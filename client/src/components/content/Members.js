@@ -1,9 +1,12 @@
-import { useState } from '@hookstate/core';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import Userfront from '@userfront/react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+
 import Posts from './posts/Posts';
 import PostForm from './posts/PostForm';
 import Tags, { tagOptions } from './posts/Tags';
@@ -15,31 +18,56 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Members = () => {
-  const tagValue = useState(tagOptions.map((tag) => tag.value));
-  const renderForm = useState(false);
+  const [tagValue, setTagValue] = useState(tagOptions.map((tag) => tag.value));
+  const [renderForm, setRenderForm] = useState({ display: false, post: null });
   const classes = useStyles();
+  const [postState, setPostState] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const config = {
+    headers: { 
+      Authorization: `Bearer ${Userfront.accessToken()}`,
+    }
+  };
+
+  const fetchData = async () => {
+    const res = await axios.get('/api/posts', config);
+    setPostState(res);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {    
+    fetchData();
+  },[]);
 
   const handleTagClick = (data) => {
-    tagValue.set(data);    
+    setTagValue(data);    
   };
 
-  const handleClickOpen = () => {
-    renderForm.set(true);
+  const handleFormOpen = (post) => {
+    if(post) {
+      setRenderForm({ display: true, post: post });
+    } else {
+      setRenderForm({ display: true, post: null });
+    }    
   };
 
-  const handleFormClose = () => {
-    renderForm.set(false);
+  const handleFormClose = (shouldReload) => {
+    setRenderForm({ display: false, post: null });
+    shouldReload && fetchData();
   };
 
   const extractTagNames = () => {
     return tagOptions
-      .filter((option) => tagValue.get().indexOf(option.value) !== -1)
+      .filter((option) => tagValue.indexOf(option.value) !== -1)
       .map((option) => option.label);
   }      
 
   return (
     <Container component="main" >
-      {renderForm.get() && <PostForm onClose={handleFormClose}/> }    
+      {renderForm.display && 
+        <PostForm onClose={handleFormClose} post={renderForm.post}/> 
+      }    
       <Grid container spacing={2}>
           {/* <Typography variant="h4" color="primary" >
             Header goes here
@@ -50,7 +78,7 @@ const Members = () => {
         <Grid item xs={12} sm={10} md={10} >
           <Tags 
             label="Tags:"
-            value={tagValue.get()}
+            value={tagValue}
             setValue={handleTagClick}
             options={tagOptions}
             allowClick
@@ -62,12 +90,16 @@ const Members = () => {
             variant="contained"
             color="secondary"
             className={classes.newButton}
-            onClick={handleClickOpen}
+            onClick={() => handleFormOpen()}
           >
             New
           </Button>      
         </Grid>
-        <Posts tags={extractTagNames()}/>
+        <Posts 
+          tags={extractTagNames()} 
+          onEdit={handleFormOpen} 
+          posts={postState}
+          isLoading={isLoading}/>
       </Grid>
     </Container>
   )

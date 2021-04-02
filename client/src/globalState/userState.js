@@ -18,49 +18,20 @@ export function useUserState() {
         get isAuthenticated() {
           return state.isAuthenticated.get();
         },
-
-        async register({ name, email, password }) {
-          const username = name;
-          try {
-            await Userfront.signup({ method: 'password', username, email, password });  
-            state.user.set(jwt(Userfront.idToken()));          
-            state.isAuthenticated.set(true);
-            state.isLoading.set(false);   
-          } catch (err) {
-            console.log(err);            
-            alertState.setAlert(err.response.data.message, 'error');
-            state.user.set(null);
-            state.isAuthenticated.set(false);
-            state.isLoading.set(false);
-          }          
-        },        
-
-        async signIn({ email, password }) {
-          try {            
-            await Userfront.login({ method: 'password', email, password });
-            state.user.set(jwt(Userfront.idToken()));
-            state.isAuthenticated.set(true);
-            state.isLoading.set(false);   
-          } catch (err) {
-            alertState.setAlert(err.response.data.message, 'error')
-            state.user.set(null);
-            state.isAuthenticated.set(false);
-            state.isLoading.set(false);
-          }
-        },
-        
+       
         // @purpose   Sync state with local cookie on startup or full refresh
         async loadUser() {
-          // const config = {
-          //   headers: { 
-          //     'Content-Type': 'application/json',
-          //     Authorization: `Bearer ${Userfront.accessToken()}`,
-          //   }
-          // };
+          const config = {
+            headers: { 
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${Userfront.accessToken()}`,
+            }
+          };
           
           try {
-            // const res = await axios.get('/api/users/me', config );
-            state.user.set(jwt(Userfront.idToken()));
+            const res = await axios.get('/api/users/me', config );
+            state.roles.set(res.data.authorization[res.data.tenantId].roles);
+            state.user.set(jwt(Userfront.idToken()));            
             state.isAuthenticated.set(true);
             state.isLoading.set(false);   
           } catch (err) {
@@ -80,6 +51,10 @@ export function useUserState() {
 
         get user() {
             return state.user.get()
+        },
+
+        get roles() {
+          return state.roles.get()
         },
 
         get() {
