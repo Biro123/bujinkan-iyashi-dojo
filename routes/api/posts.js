@@ -106,7 +106,7 @@ router.put(
       const tenantId = req.auth.tenantId;
       const roles = req.auth.authorization[tenantId].roles;
       if (post.user !== req.auth.userUuid && !roles.includes('admin')) {
-        return res.status(403).json({ errors: [{ msg: 'Not Authorised' }] });
+        return res.status(401).json({ errors: [{ msg: 'User not Authorised' }] });
       }
 
       // exclude id, so just provide new list of tagnames
@@ -130,6 +130,34 @@ router.put(
     }
   }
 );
+
+// @route    DELETE api/posts/:id
+// @desc     Delete a post
+// @access   Private
+router.delete('/:id', [ufAuth, checkObjectId('id')], async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ errors: [{ msg: 'Post not found' }] });
+    }
+
+    // Only allow the post creater or an admin to update
+    const tenantId = req.auth.tenantId;
+    const roles = req.auth.authorization[tenantId].roles;
+    if (post.user !== req.auth.userUuid && !roles.includes('admin')) {
+      return res.status(401).json({ errors: [{ msg: 'User not Authorised' }] });
+    }
+
+    await post.remove();
+
+    res.json({ msg: 'Post removed' });
+  } catch (err) {
+    console.error(err.message);
+
+    res.status(500).send('Server Error');
+  }
+});
 
 // @route    GET api/posts
 // @desc     Get all posts
@@ -163,31 +191,6 @@ router.get('/', ufAuth, async (req, res) => {
 //   }
 // });
 
-// // @route    DELETE api/posts/:id
-// // @desc     Delete a post
-// // @access   Private
-// router.delete('/:id', [auth, checkObjectId('id')], async (req, res) => {
-//   try {
-//     const post = await Post.findById(req.params.id);
-
-//     if (!post) {
-//       return res.status(404).json({ msg: 'Post not found' });
-//     }
-
-//     // Check user
-//     if (post.user.toString() !== req.user.id) {
-//       return res.status(401).json({ msg: 'User not authorized' });
-//     }
-
-//     await post.remove();
-
-//     res.json({ msg: 'Post removed' });
-//   } catch (err) {
-//     console.error(err.message);
-
-//     res.status(500).send('Server Error');
-//   }
-// });
 
 // // @route    PUT api/posts/like/:id
 // // @desc     Like a post
