@@ -47,9 +47,12 @@ router.post(
 
     // Create new post
     try {
-      const newTags = req.body.tags.map(tagName => {
-        return { tag: tagName }
+      const newTags = req.body.tags.map(tag => {
+        return { tag: tag.tag }
       });
+      if (newTags.length === 0) {
+        newTags.push({ tag: 'None' });
+      }
 
       const newPost = new Post({
         title: req.body.title,
@@ -63,6 +66,63 @@ router.post(
 
       const post = await newPost.save();
 
+      res.json(post);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
+// @route    PUT api/posts/:id
+// @desc     Update a post
+// @access   Private
+router.put(
+  '/:id',
+  ufAuth,
+  checkObjectId('id'),
+  check('title', 'Title is required').notEmpty(),
+  async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }    
+
+    // Read logged-in user details from userfront api
+    const apiRes = await getUser(req.auth.userId);
+    if (!apiRes) {
+      return res.status(500).json({ errors: [{ msg: 'Unable to connect to auth service' }] });
+    }
+    const user = apiRes.data;
+
+    try {
+      const post = await Post.findById(req.params.id);
+      if (!post) {
+        return res.status(404).json({ errors: [{ msg: 'Post not found' }] });
+      }
+
+      // Only allow the post creater or an admin to update
+      const tenantId = req.auth.tenantId;
+      const roles = req.auth.authorization[tenantId].roles;
+      if (post.user !== req.auth.userUuid && !roles.includes('admin')) {
+        return res.status(403).json({ errors: [{ msg: 'Not Authorised' }] });
+      }
+
+      // exclude id, so just provide new list of tagnames
+      const updatedTags = req.body.tags.map(tag => {
+        return { tag: tag.tag }
+      });
+      if (updatedTags.length === 0) {
+        updatedTags.push({ tag: 'None' });
+      }
+
+      post.title = req.body.title;
+      post.text = req.body.text;
+      post.link = req.body.link;
+      post.tags = updatedTags;
+
+      await post.save();
       res.json(post);
     } catch (err) {
       console.error(err.message);
