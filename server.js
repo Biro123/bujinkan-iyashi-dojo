@@ -16,7 +16,11 @@ connectDB();
 const helmetConfig = {
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'", 'https://api.userfront.com', 'https://api.anymod.com/'],
+      defaultSrc: ["'self'", 
+      'https://api.userfront.com', 
+      'https://api.anymod.com/',
+      'https://www.youtube.com/'
+      ],
       scriptSrc: [
         "'self'", "'unsafe-inline'", "'unsafe-eval'", 
         process.env.APP_URL, 
