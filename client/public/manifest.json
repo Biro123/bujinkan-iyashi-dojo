@@ -13,7 +13,7 @@
       "sizes": "200x200"
     }
   ],
-  "start_url": "/posts",
+  "start_url": "https://bujinkan-iyashi-dojo.herokuapp.com/posts",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
