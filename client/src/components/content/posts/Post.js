@@ -83,7 +83,7 @@ const Post = (props) => {
           <ReactPlayer 
             url={link} 
             width='100%'
-            // controls
+            controls
             height={playerHeight}
           />
           <Typography variant='body2' >
