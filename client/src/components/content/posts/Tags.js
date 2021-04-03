@@ -26,11 +26,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const tagOptions = [
-  {label: "None", value: 1}, 
-  {label: "Philosophy", value: 2}, 
-  {label: "Basics", value: 3}, 
-  {label: "Kamae", value: 4},
-  {label: "Kihon Happo", value: 5},
+  // {label: "None", value: 1}, 
+  {label: "Basics", value: 3},
+  {label: "Advanced", value: 4},  
+  {label: "Kamae", value: 5},
+  {label: "Kihon Happo", value: 6},
+  {label: "Sanshin no Kata", value: 7},
+  {label: "Philosophy", value: 8},    
+  {label: "Miscellaneous", value: 9}
 ];
 
 const Tags = ({

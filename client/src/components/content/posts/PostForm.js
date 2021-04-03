@@ -149,14 +149,19 @@ export default function PostForm(props) {
 
   const onSubmit = async (e) => {
     e.preventDefault();    
-    if (title === '') {
+    if (formData.title === '') {
       alertState.setAlert('Please enter a title', 'error');
+      return;  
+    }
+    if (formData.tags.length === 0) {
+      alertState.setAlert('Please select at least one tag', 'error');
+      return;  
+    } 
+    
+    if (formData._id.get()) {
+      putData();
     } else {
-      if (formData._id.get()) {
-        putData();
-      } else {
-        postData();
-      }
+      postData();
     }
   };
 
