@@ -27,7 +27,7 @@ const helmetConfig = {
         'https://www.youtube.com'
       ],
       styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
-      imgSrc: ["'self'", 'data:'], // 'https://*.com'],
+      imgSrc: ["'self'", 'data:',  'https://i.ytimg.com'], // 'https://*.com'],
       fontSrc: ["'self'", 'https://*.com', 'data:']
     },
   }
