@@ -83,9 +83,8 @@ const Post = (props) => {
           <ReactPlayer 
             url={link} 
             width='100%'
-            controls
+            // controls
             height={playerHeight}
-            // height='calc(320 / 1.778)'
           />
           <Typography variant='body2' >
             {text}
