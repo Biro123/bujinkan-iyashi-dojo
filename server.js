@@ -20,7 +20,7 @@ const helmetConfig = {
       scriptSrc: [
         "'self'", "'unsafe-inline'", "'unsafe-eval'", 
         process.env.APP_URL, 
-        'https://www.youtube.com/iframe_api'
+        'https://www.youtube.com'
       ],
       styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
       imgSrc: ["'self'", 'data:'], // 'https://*.com'],
