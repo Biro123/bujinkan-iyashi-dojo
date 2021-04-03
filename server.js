@@ -17,7 +17,11 @@ const helmetConfig = {
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'", 'https://api.userfront.com', 'https://api.anymod.com/'],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", process.env.APP_URL],
+      scriptSrc: [
+        "'self'", "'unsafe-inline'", "'unsafe-eval'", 
+        process.env.APP_URL, 
+        'https://www.youtube.com/iframe_api'
+      ],
       styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
       imgSrc: ["'self'", 'data:'], // 'https://*.com'],
       fontSrc: ["'self'", 'https://*.com', 'data:']
