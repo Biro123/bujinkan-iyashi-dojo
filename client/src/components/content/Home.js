@@ -2,6 +2,7 @@ import { useUserState } from '../../globalState/userState';
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from '@material-ui/core/styles';
+import Link from '@material-ui/core/Link';
 
 import logo from '../../img/iyashi_logo.jpg';
 
@@ -57,12 +58,15 @@ const Home = () => {
         <Grid item xs={12} sm={6}>          
           <Paper className={classes.paper}>         
             <h2>Iyashi Dojo</h2>   
-            The Iyashi Dojo (meaning healing dojo), is a small dojo based in Hartlepool. 
-            Headed by two extremely experienced shidōshi (meaning qualified instructors).
+            The Iyashi Dojo is a small dojo based in Hartlepool. 
+            Headed by two extremely experienced shidōshi. The main website can be found at: 
+            <Link href='http://www.bujinkaniyashidojo.com' color='secondary'> 
+              <span> http://www.bujinkaniyashidojo.com/</span>
+            </Link>
           </Paper>
         </Grid>
       </Grid>
-      <pre>User: {userData.name}</pre>
+      {/* <pre>User: {userData.name}</pre> */}
     </div>
   );
 }
