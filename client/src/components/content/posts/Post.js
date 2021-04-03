@@ -69,7 +69,10 @@ const Post = (props) => {
   };
 
   const canUpdatePost = () => {
-    return (userState.user?.userUuid && userState.user.userUuid === user) ||
+    if (!userState.user) {
+      return false
+    }
+    return (userState.user.userUuid && userState.user.userUuid === user) ||
             userState.roles.includes('admin');
   };
 

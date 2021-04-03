@@ -12,6 +12,8 @@ import PostForm from './posts/PostForm';
 import ConfirmDeleteDialog from './posts/ConfirmDeleteDialog';
 import Tags, { tagOptions } from './posts/Tags';
 
+import { useUserState } from '../../globalState/userState';
+
 const useStyles = makeStyles((theme) => ({
   newButton: {
     margin: theme.spacing(1, 0, 1),
@@ -25,6 +27,7 @@ const Members = () => {
   const classes = useStyles();
   const [postState, setPostState] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const userState = useUserState();
 
   const config = {
     headers: { 
@@ -98,17 +101,19 @@ const Members = () => {
             allowClick
           />
         </Grid>
-        <Grid item xs={12} sm={2} md={2}>
-          <Button 
-            fullWidth
-            variant="contained"
-            color="secondary"
-            className={classes.newButton}
-            onClick={() => handleFormOpen()}
-          >
-            New
-          </Button>      
-        </Grid>
+        {userState.user &&
+          <Grid item xs={12} sm={2} md={2}>
+            <Button 
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.newButton}
+              onClick={() => handleFormOpen()}
+            >
+              New
+            </Button>      
+          </Grid>
+        }
         <Posts 
           tags={extractTagNames()} 
           onEdit={handleFormOpen} 
