@@ -59,7 +59,7 @@ router.post(
         text: req.body.text,
         link: req.body.link,
         tags: newTags,
-        name: user.username,
+        name: user.name,
         avatar: user.image,
         user: req.auth.userUuid
       });
