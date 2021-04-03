@@ -94,7 +94,7 @@ const Members = () => {
           </Typography> */}
         <Grid item xs={12} sm={10} md={10} >
           <Tags 
-            label="Tags:"
+            // label="Tags:"
             value={tagValue}
             setValue={handleTagClick}
             options={tagOptions}
