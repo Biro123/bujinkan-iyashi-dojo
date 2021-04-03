@@ -13,6 +13,7 @@ import routes from './components/navigation/routes';
 
 const App = () => {
 
+  console.log(process.env.REACT_APP_UF_INIT);
   Userfront.init(process.env.REACT_APP_UF_INIT);
   const userState = useUserState();
 

@@ -35,7 +35,7 @@ export function useUserState() {
             state.isAuthenticated.set(true);
             state.isLoading.set(false);   
           } catch (err) {
-            console.log(err.response);
+            // console.log(err.response);
             state.user.set(null);
             state.isAuthenticated.set(false);
             state.isLoading.set(false);

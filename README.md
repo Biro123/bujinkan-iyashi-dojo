@@ -18,7 +18,7 @@ npm run start
 npm run dev
 
 #Config and deploy for heroku
-heroku create appname               - defines appto Heroku..
+heroku create appname               - defines app to Heroku..
 git push heroku master
 
 Once set up, log into heroku : https://dashboard.heroku.com/apps  and add the env variables:
